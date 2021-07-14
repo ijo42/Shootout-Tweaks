@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "shootout",
+        "name": "Shootout Tweaks",
+        "description": "Idea belong to day-d",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "https://github.com/ijo42/shootout-tw",
+        "updateUrl": "",
+        "authorList": ["ijo42"],
+        "credits": "",
+        "logoFile": "",
+        "screenshots": [],
+        "dependencies": []
+    }
+]
