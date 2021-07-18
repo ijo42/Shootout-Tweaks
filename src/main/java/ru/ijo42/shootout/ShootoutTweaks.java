@@ -30,7 +30,7 @@ public class ShootoutTweaks {
 
     @Mod.EventHandler
     public void preinit(FMLPreInitializationEvent event) {
-        Path configPath = event.getModConfigurationDirectory().toPath().resolve("config/plugins").resolve(CONFIG_FILENAME);
+        Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(CONFIG_FILENAME);
         if (Files.notExists(configPath)) {
             try {
                 Files.copy(getResource(CONFIG_FILENAME), configPath);
@@ -43,8 +43,8 @@ public class ShootoutTweaks {
         Gson gson = new GsonBuilder().create();
         try {
             config = gson.fromJson(Files.newBufferedReader(configPath), Config.class);
-            giveDamageColor = Color.decode(config.bulletDamage.giveDamageColor);
-            takeDamageColor = Color.decode(config.bulletDamage.takeDamageColor);
+            toIntRGB(config.bulletDamage.giveDamageColor);
+            toIntRGB(config.bulletDamage.takeDamageColor);
         } catch (Exception e) {
             System.err.println("[ShootoutTweaks] Could not load config");
         }
@@ -52,5 +52,9 @@ public class ShootoutTweaks {
 
     public static InputStream getResource(String name) {
         return ShootoutTweaks.class.getResourceAsStream(name);
+    }
+
+    public static int toIntRGB(String color) {
+        return Integer.parseInt(color.replace("0x", "").replace("#", ""),16);
     }
 }
