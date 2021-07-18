@@ -1,0 +1,10 @@
+{
+  "modules": [
+    "bulletDamage": true
+  ],
+  "bulletDamage": [
+    "takeDamageColor": "#328EFF",
+    "giveDamageColor": "#FF1E1E",
+	"delay": 3
+  ]
+}
