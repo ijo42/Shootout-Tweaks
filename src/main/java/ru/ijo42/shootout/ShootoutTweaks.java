@@ -1,14 +1,11 @@
 package ru.ijo42.shootout;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
-import java.awt.*;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import ru.ijo42.shootout.proxy.CommonProxy;
 
 @Mod(
         modid = ShootoutTweaks.MOD_ID,
@@ -24,37 +21,22 @@ public class ShootoutTweaks {
 
     @Mod.Instance(MOD_ID)
     public static ShootoutTweaks INSTANCE;
-    public static Config config;
-    public static Color giveDamageColor;
-    public static Color takeDamageColor;
+    @SidedProxy(clientSide = "ru.ijo42.shootout.proxy.ClientProxy", serverSide = "ru.ijo42.shootout.proxy.CommonProxy")
+    public static CommonProxy proxy;
+    public Config config;
 
     @Mod.EventHandler
-    public void preinit(FMLPreInitializationEvent event) {
-        Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(CONFIG_FILENAME);
-        if (Files.notExists(configPath)) {
-            try {
-                Files.copy(getResource(CONFIG_FILENAME), configPath);
-            } catch (Exception e) {
-                System.err.println("[ShootoutTweaks] Could not copy default config to " + configPath);
-                return;
-            }
-        }
-
-        Gson gson = new GsonBuilder().create();
-        try {
-            config = gson.fromJson(Files.newBufferedReader(configPath), Config.class);
-            toIntRGB(config.bulletDamage.giveDamageColor);
-            toIntRGB(config.bulletDamage.takeDamageColor);
-        } catch (Exception e) {
-            System.err.println("[ShootoutTweaks] Could not load config");
-        }
+    public void preInit(FMLPreInitializationEvent event) {
+        proxy.preInit(event);
     }
 
-    public static InputStream getResource(String name) {
-        return ShootoutTweaks.class.getResourceAsStream(name);
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.init(event);
     }
 
-    public static int toIntRGB(String color) {
-        return Integer.parseInt(color.replace("0x", "").replace("#", ""),16);
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit(event);
     }
 }
