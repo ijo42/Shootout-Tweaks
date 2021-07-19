@@ -2,10 +2,10 @@
     {
         "modid": "shootout",
         "name": "Shootout Tweaks",
-        "description": "Idea belong to day-d",
+        "description": "Weapon mod tweaks. Idea belong to day-d",
         "version": "${version}",
         "mcversion": "${mcversion}",
-        "url": "https://github.com/ijo42/shootout-tw",
+        "url": "https://github.com/ijo42/shootout-tweaks",
         "updateUrl": "",
         "authorList": ["ijo42"],
         "credits": "",
