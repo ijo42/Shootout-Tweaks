@@ -63,7 +63,7 @@ public class DamageRenderer {
             } else {
                 GL11.glPushMatrix();
                 fontRenderer
-                        .drawStringWithShadow(String.format("%.2f", currentDamageReceived), width / 2, height / 2 - 15, receivedDamageColor);
+                        .drawStringWithShadow(String.format("%d", Math.round(currentDamageReceived)), width / 2, height / 2 - 15, receivedDamageColor);
                 GL11.glPopMatrix();
             }
         }
@@ -75,7 +75,7 @@ public class DamageRenderer {
             } else {
                 GL11.glPushMatrix();
                 fontRenderer
-                        .drawStringWithShadow(String.format("%.2f", currentDamageTaken), width / 2 - 20, height / 2, takeDamageColor);
+                        .drawStringWithShadow(String.format("%d", Math.round(currentDamageTaken)), width / 2 - 20, height / 2, takeDamageColor);
                 GL11.glPopMatrix();
             }
         }
