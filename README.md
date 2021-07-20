@@ -1,32 +1,18 @@
-# ShootoutTweaks
+# [1.12.2] ShootoutTweaks
+## Upgrade your shooting server
 
-Данный мод подразумевает собой всевозможные твики для оружейных модов
+![](https://raw.githubusercontent.com/ijo42/Shootout-Tweaks/master/img/logo.png)
+**Modules:**
+* BulletDamage - displays the damage done/received at the sight.
 
-Мод будет в дальнейшем развиваться потихоньку, а твики будут как
-клиентскими, так и серверными
-
-Конфиги располагаются в папке config/plugins/, так как в дальнейшем
-будут еще моды/модули, которые не несут в себе никакого "материального"
-контента, а являются лишь логикой или косметикой и конфиги всех таких
-модов/модулей будут идти в папку config/plugins/
-
-В текущей версии необходимо сделать отображение полученного/нанесенного
-урона в центре экрана(у прицела рядом), окрасив эти значения в цвет
-из конфигов. Урон отображается только по игрокам, мобы не учитываются
-Конфиг клиентский, а значит цвет должен подтягиваться, каждому игроку тот,
-который он задал в конфиге(если задал), иначе применяются дефолтные значения
-
-Показатели урона должны суммироваться, если урон наносится по одному
-и тому же игроку, иначе счетчик начинается заново. Значения выводятся
-в течении времени, указанного так же в конфиге мода
-
-В конфиге предусмотрен блок modules, который подразумевает отключение
-тех или иных функций мода. Далее идут блоки непосредственно с функциями
-этих модулей
+<span style="font-size:13px">*More information*: [click](https://www.curseforge.com/minecraft/mc-mods/shootout-tweaks) </span>
 
 ![](https://raw.githubusercontent.com/ijo42/Shootout-Tweaks/master/img/damage-display.png)
 
+**We worked on the mod:**
+* Main Developers - [ijo42](https://github.com/ijo42)
+* The authors of the idea - [day-d](https://github.com/dayd21git)
+
 ------
 
-idea belong to [Day-D](https://github.com/dayd2021)
-
+! The translation may contain errors. Contact the authors if you find an error.
