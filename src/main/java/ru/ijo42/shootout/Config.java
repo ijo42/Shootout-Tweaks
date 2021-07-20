@@ -14,16 +14,28 @@ public class Config {
         public String takeDamageColor = "#328EFF";
         public String giveDamageColor = "#FF1E1E";
         public int delay = 3;
+        public String[] enableWorlds = {
+                "DIM1",
+                "DIM-1",
+                "world"
+        };
     }
 }
 
 /*
-*   "modules": [
+ {
+  "modules": {
     "bulletDamage": true
-  ],
-  "bulletDamage": [
+  },
+  "bulletDamage": {
     "takeDamageColor": "#328EFF",
     "giveDamageColor": "#FF1E1E",
-	"delay": 3
-  ]
-* */
+    "delay": 3,
+    "enableWorlds": [
+       "DIM1",
+       "DIM-1",
+       "hub"
+    ]
+  }
+}
+*/

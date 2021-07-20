@@ -7,28 +7,34 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.ijo42.shootout.ShootoutTweaks;
 import ru.ijo42.shootout.proxy.ClientProxy;
 
+import java.util.Locale;
+
 public class DamageDisplayMessage implements IMessage {
     float amount;
     int dealer;
+    int dim;
 
     public DamageDisplayMessage() {
     }
 
-    public DamageDisplayMessage(float amount, int dealer) {
+    public DamageDisplayMessage(float amount, int dealer, String dim) {
         this.amount = amount;
         this.dealer = dealer;
+        this.dim = dim.toLowerCase(Locale.ROOT).hashCode();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeFloat(amount);
         buf.writeInt(dealer);
+        buf.writeInt(dim);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         amount = buf.readFloat();
         dealer = buf.readInt();
+        dim = buf.readInt();
     }
 
     public static class DamageDisplayMessageHandler implements IMessageHandler<DamageDisplayMessage, IMessage> {
@@ -38,8 +44,9 @@ public class DamageDisplayMessage implements IMessage {
 
             float amount = message.amount;
             int dealer = message.dealer;
+            int dim = message.dim;
 
-            ((ClientProxy)ShootoutTweaks.proxy).damageRenderer.updateDisplayDamage(dealer, amount);
+            ((ClientProxy) ShootoutTweaks.proxy).damageRenderer.updateDisplayDamage(dealer, amount, dim);
             return null;
         }
     }

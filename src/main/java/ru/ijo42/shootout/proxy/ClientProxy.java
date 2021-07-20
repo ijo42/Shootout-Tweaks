@@ -19,7 +19,8 @@ public class ClientProxy extends CommonProxy {
             final Config config = ShootoutTweaks.INSTANCE.config;
             giveDamageColor = Utils.toIntRGB(config.bulletDamage.giveDamageColor);
             takeDamageColor = Utils.toIntRGB(config.bulletDamage.takeDamageColor);
-            this.damageRenderer = new DamageRenderer(giveDamageColor, takeDamageColor, config.bulletDamage.delay);
+            this.damageRenderer =
+                    new DamageRenderer(giveDamageColor, takeDamageColor, config.bulletDamage.delay, config.bulletDamage.enableWorlds);
             if (ShootoutTweaks.INSTANCE.config.modules.bulletDamage) {
                 MinecraftForge.EVENT_BUS.register(this.damageRenderer);
             }
