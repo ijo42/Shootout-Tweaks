@@ -2,6 +2,7 @@
 ## Upgrade your shooting server
 
 ![](https://raw.githubusercontent.com/ijo42/Shootout-Tweaks/master/img/logo.png)
+
 **Modules:**
 * BulletDamage - displays the damage done/received at the sight.
 
