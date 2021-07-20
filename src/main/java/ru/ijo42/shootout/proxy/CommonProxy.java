@@ -20,6 +20,8 @@ import java.nio.file.Path;
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(ShootoutTweaks.CONFIG_FILENAME);
+        configPath.getParent().toFile().mkdirs();
+
         if (Files.notExists(configPath)) {
             try {
                 Files.copy(Utils.getResource(ShootoutTweaks.CONFIG_FILENAME), configPath);
