@@ -1,5 +1,6 @@
 package ru.ijo42.shootout.damagedisplay;
 
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,6 +23,12 @@ public class DamageListener {
             ShootOutNetworkWrapper.INSTANCE.sendTo(
                     new DamageDisplayMessage(Math.min(ev.getAmount(), receiver.getHealth()), -1),
                     dealer);
+        } else if(!(ev.getSource().getTrueSource() instanceof EntityCreature) && ev.getEntity() instanceof EntityPlayerMP){
+            final EntityPlayerMP receiver = (EntityPlayerMP) ev.getEntity();
+
+            ShootOutNetworkWrapper.INSTANCE.sendTo(
+                    new DamageDisplayMessage(Math.min(ev.getAmount(), receiver.getHealth()), -1),
+                    receiver);
         }
     }
 }
