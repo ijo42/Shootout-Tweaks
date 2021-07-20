@@ -25,7 +25,7 @@ public class ClientProxy extends CommonProxy {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            ShootoutTweaks.logger.error(e);
         }
     }
 }

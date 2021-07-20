@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.Logger;
 import ru.ijo42.shootout.proxy.CommonProxy;
 
 @Mod(
@@ -23,6 +24,7 @@ public class ShootoutTweaks {
     public static ShootoutTweaks INSTANCE;
     @SidedProxy(clientSide = "ru.ijo42.shootout.proxy.ClientProxy", serverSide = "ru.ijo42.shootout.proxy.CommonProxy")
     public static CommonProxy proxy;
+    public static Logger logger;
     public Config config;
 
     @Mod.EventHandler

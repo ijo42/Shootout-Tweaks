@@ -19,6 +19,7 @@ import java.nio.file.Path;
 
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
+        ShootoutTweaks.logger = event.getModLog();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(ShootoutTweaks.CONFIG_FILENAME);
         configPath.getParent().toFile().mkdirs();
@@ -32,7 +33,7 @@ public class CommonProxy {
         try {
             ShootoutTweaks.INSTANCE.config = gson.fromJson(Files.newBufferedReader(configPath), Config.class);
         } catch (Exception e) {
-            System.err.println("[ShootoutTweaks] Could not load config. Forcing defaults");
+            ShootoutTweaks.logger.error("[ShootoutTweaks] Could not load config. Forcing defaults");
             if (writeDefaultConfig(gson, configPath)) {
                 return;
             }
@@ -49,7 +50,7 @@ public class CommonProxy {
             gson.newJsonWriter(new PrintWriter(configPath.toFile()))
                     .jsonValue(gson.toJson(new Config(), Config.class)).close();
         } catch (Exception e) {
-            System.err.println("[ShootoutTweaks] Could not copy default config to " + configPath);
+            ShootoutTweaks.logger.error("[ShootoutTweaks] Could not copy default config to " + configPath);
             return true;
         }
         return false;
