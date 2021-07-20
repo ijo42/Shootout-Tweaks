@@ -10,36 +10,49 @@ import net.minecraftforge.fml.relauncher.Side;
 import ru.ijo42.shootout.Config;
 import ru.ijo42.shootout.ShootOutNetworkWrapper;
 import ru.ijo42.shootout.ShootoutTweaks;
-import ru.ijo42.shootout.Utils;
 import ru.ijo42.shootout.damagedisplay.DamageListener;
 import ru.ijo42.shootout.packets.DamageDisplayMessage;
 
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(ShootoutTweaks.CONFIG_FILENAME);
         configPath.getParent().toFile().mkdirs();
 
         if (Files.notExists(configPath)) {
-            try {
-                Files.copy(Utils.getResource(ShootoutTweaks.CONFIG_FILENAME), configPath);
-            } catch (Exception e) {
-                System.err.println("[ShootoutTweaks] Could not copy default config to " + configPath);
+            if (writeDefaultConfig(gson, configPath)) {
                 return;
             }
         }
 
-        Gson gson = new GsonBuilder().create();
         try {
             ShootoutTweaks.INSTANCE.config = gson.fromJson(Files.newBufferedReader(configPath), Config.class);
         } catch (Exception e) {
-            System.err.println("[ShootoutTweaks] Could not load config");
+            System.err.println("[ShootoutTweaks] Could not load config. Forcing defaults");
+            if (writeDefaultConfig(gson, configPath)) {
+                return;
+            }
         }
 
         ShootOutNetworkWrapper.INSTANCE.registerMessage(DamageDisplayMessage.DamageDisplayMessageHandler.class, DamageDisplayMessage.class, 0, Side.CLIENT);
-        MinecraftForge.EVENT_BUS.register(new DamageListener());
+        if(event.getSide() == Side.SERVER) {
+            MinecraftForge.EVENT_BUS.register(new DamageListener());
+        }
+    }
+
+    private boolean writeDefaultConfig(Gson gson, Path configPath) {
+        try {
+            gson.newJsonWriter(new PrintWriter(configPath.toFile()))
+                    .jsonValue(gson.toJson(new Config(), Config.class)).close();
+        } catch (Exception e) {
+            System.err.println("[ShootoutTweaks] Could not copy default config to " + configPath);
+            return true;
+        }
+        return false;
     }
 
     public void init(FMLInitializationEvent event) {

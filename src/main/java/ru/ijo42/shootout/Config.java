@@ -2,17 +2,18 @@ package ru.ijo42.shootout;
 
 public class Config {
 
-    public Modules modules;
-    public BulletDamage bulletDamage;
+    public Modules modules = new Modules();
+
+    public BulletDamage bulletDamage = new BulletDamage();
 
     public static class Modules {
-        public boolean bulletDamage;
+        public boolean bulletDamage = true;
     }
 
     public static class BulletDamage {
-        public String takeDamageColor;
-        public String giveDamageColor;
-        public int delay;
+        public String takeDamageColor = "#328EFF";
+        public String giveDamageColor = "#FF1E1E";
+        public int delay = 3;
     }
 }
 
