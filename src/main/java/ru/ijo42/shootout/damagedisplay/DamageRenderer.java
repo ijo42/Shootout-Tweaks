@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 public class DamageRenderer {
     private final FontRenderer fontRenderer;
-    private final int receivedDamageColor;
     private final int givenDamageColor;
+    private final int receivedDamageColor;
     private final int durationDisplay;
     private final Set<Integer> enableWorlds;
     public volatile long receivedUpdate = 0L;
@@ -26,10 +26,10 @@ public class DamageRenderer {
     public volatile float currentDamageReceived = 0.0F;
     public volatile float currentDamageGiven = 0.0F;
 
-    public DamageRenderer(int receivedDamageColor, int givenDamageColor, int durationDisplay, String[] enableWorlds) {
+    public DamageRenderer(int givenDamageColor, int receivedDamageColor, int durationDisplay, String[] enableWorlds) {
         this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        this.receivedDamageColor = receivedDamageColor;
         this.givenDamageColor = givenDamageColor;
+        this.receivedDamageColor = receivedDamageColor;
         this.durationDisplay = durationDisplay;
         this.enableWorlds = ImmutableSet.copyOf(
                 Arrays.stream(enableWorlds).map(s -> s.toLowerCase(Locale.ROOT))
@@ -46,28 +46,21 @@ public class DamageRenderer {
     public void updateDisplayDamage(int profile, float damage, int dim) {
         long currentTimeMillis = System.currentTimeMillis();
 
-        if (enableWorlds.contains(dim)) {
+        if (this.enableWorlds.contains(dim)) {
             if (profile == -1) {
                 if (ShootoutTweaks.INSTANCE.config.debug) {
-                    ShootoutTweaks.logger.info("Received packet with profile == -1. Displaying as received damage");
+                    ShootoutTweaks.logger.info("Received packet with profile == -1. Displaying as given damage");
                 }
-                float d = currentDamageReceived;
-                currentDamageReceived = d + damage;
-                receivedUpdate = currentTimeMillis;
-            } else if (lastAttacked != -1 && lastAttacked == profile) {
-                if (ShootoutTweaks.INSTANCE.config.debug) {
-                    ShootoutTweaks.logger.info("Received packet with second cond. Displaying as given damage");
-                }
-                float d = currentDamageGiven;
-                currentDamageGiven = d + damage;
-                givenUpdate = currentTimeMillis;
+                float d = profile == this.lastAttacked ? this.currentDamageGiven : 0.0F;
+                this.currentDamageGiven = d + damage;
+                this.givenUpdate = currentTimeMillis;
             } else {
                 if (ShootoutTweaks.INSTANCE.config.debug) {
-                    ShootoutTweaks.logger.info("Received packet with third cond. Displaying as given damage");
+                    ShootoutTweaks.logger.info("Received packet with second cond. Displaying as received damage");
                 }
-                currentDamageGiven = damage;
-                lastAttacked = profile;
-                givenUpdate = currentTimeMillis;
+                float d = this.currentDamageReceived;
+                this.currentDamageReceived = d + damage;
+                this.receivedUpdate = currentTimeMillis;
             }
         } else if (ShootoutTweaks.INSTANCE.config.debug) {
             ShootoutTweaks.logger.info("Received packet has disabled world. skipping...");
@@ -76,32 +69,31 @@ public class DamageRenderer {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent.Text event) {
-
         long currentTimeMillis = System.currentTimeMillis();
         float height = event.getResolution().getScaledHeight(),
                 width = event.getResolution().getScaledWidth();
 
-        if (currentDamageReceived > 0) {
-            if (receivedUpdate + TimeUnit.SECONDS.toMillis(durationDisplay) < currentTimeMillis) {
-                currentDamageReceived = 0.0F;
+        if (this.currentDamageGiven > 0) {
+            if (givenUpdate + TimeUnit.SECONDS.toMillis(durationDisplay) < currentTimeMillis) {
+                this.currentDamageGiven = 0.0F;
+                this.lastAttacked = -1;
             } else {
                 GL11.glPushMatrix();
-                fontRenderer
-                        .drawStringWithShadow(String.format("%d", Math.round(currentDamageReceived)), width / 2, height / 2 - 15,
-                                receivedDamageColor);
+                this.fontRenderer
+                        .drawStringWithShadow(String.format("%d", Math.round(this.currentDamageGiven)), width / 2, height / 2 - 15,
+                                this.givenDamageColor);
                 GL11.glPopMatrix();
             }
         }
 
-        if (currentDamageGiven > 0) {
-            if (givenUpdate + TimeUnit.SECONDS.toMillis(durationDisplay) < currentTimeMillis) {
-                currentDamageGiven = 0.0F;
-                lastAttacked = -1;
+        if (this.currentDamageReceived > 0) {
+            if (this.receivedUpdate + TimeUnit.SECONDS.toMillis(this.durationDisplay) < currentTimeMillis) {
+                this.currentDamageReceived = 0.0F;
             } else {
                 GL11.glPushMatrix();
-                fontRenderer
-                        .drawStringWithShadow(String.format("%d", Math.round(currentDamageGiven)), width / 2 - 20, height / 2,
-                                givenDamageColor);
+                this.fontRenderer
+                        .drawStringWithShadow(String.format("%d", Math.round(this.currentDamageReceived)), width / 2 - 20, height / 2,
+                                this.receivedDamageColor);
                 GL11.glPopMatrix();
             }
         }

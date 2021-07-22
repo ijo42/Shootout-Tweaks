@@ -12,7 +12,7 @@ public class DamageListener {
 
     @SubscribeEvent
     public void onDamage(LivingDamageEvent ev){
-        if (ev.getEntity() instanceof EntityPlayerMP) {
+        if (!(ev.getSource().getTrueSource() instanceof EntityCreature) && ev.getEntity() instanceof EntityPlayerMP) {
             final EntityPlayerMP receiver = (EntityPlayerMP) ev.getEntity();
             String dim = ShootoutTweaks.INSTANCE.config.alterWorldGrab ?
                     receiver.world.getWorldInfo().getWorldName() :
@@ -42,13 +42,11 @@ public class DamageListener {
                         new DamageDisplayMessage(Math.min(ev.getAmount(), receiver.getHealth()), -1,
                                 dim),
                         dealer);
-            } else if (!(ev.getSource().getTrueSource() instanceof EntityCreature)) {
-
+            } else {
                 if (ShootoutTweaks.INSTANCE.config.debug) {
                     ShootoutTweaks.logger.info("some another.. {}, {} damaged {} by {}HP in {}. Sending packet..",
                             ev.getSource().getTrueSource(), ev.getSource().damageType, receiver.toString(), ev.getAmount(), dim);
                 }
-
 
                 ShootOutNetworkWrapper.INSTANCE.sendTo(
                         new DamageDisplayMessage(Math.min(ev.getAmount(), receiver.getHealth()), receiver.getGameProfile().hashCode(),
