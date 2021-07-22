@@ -14,7 +14,9 @@ public class DamageListener {
     public void onDamage(LivingDamageEvent ev){
         if (ev.getEntity() instanceof EntityPlayerMP) {
             final EntityPlayerMP receiver = (EntityPlayerMP) ev.getEntity();
-            String dim = receiver.world.provider.getSaveFolder();
+            String dim = ShootoutTweaks.INSTANCE.config.alterWorldGrab ?
+                    receiver.world.getWorldInfo().getWorldName() :
+                    receiver.world.provider.getSaveFolder();
             if (dim == null) {
                 if (receiver.dimension != 0 || ShootoutTweaks.INSTANCE.config.debug) {
                     ShootoutTweaks.logger.error(String

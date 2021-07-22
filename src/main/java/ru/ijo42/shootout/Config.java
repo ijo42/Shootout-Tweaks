@@ -4,6 +4,8 @@ public class Config {
 
     public boolean debug = false;
 
+    public boolean alterWorldGrab = false;
+
     public Modules modules = new Modules();
 
     public BulletDamage bulletDamage = new BulletDamage();
@@ -27,6 +29,7 @@ public class Config {
 /*
  {
   "debug": true,
+  "alterWorldGrab": false,
   "modules": {
     "bulletDamage": true
   },
