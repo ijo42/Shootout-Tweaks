@@ -21,26 +21,21 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         ShootoutTweaks.logger = event.getModLog();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        if (ShootoutTweaks.INSTANCE.config.debug) {
-            ShootoutTweaks.logger.info("preInit Stage. loading configs..");
-        }
         Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(ShootoutTweaks.CONFIG_FILENAME);
 
-        if (configPath.getParent().toFile().mkdirs() && ShootoutTweaks.INSTANCE.config.debug) {
-            ShootoutTweaks.logger.info("config dir created");
+        if (configPath.getParent().toFile().mkdirs()) {
+            ShootoutTweaks.logger.debug("config dir created");
         }
 
         if (Files.notExists(configPath)) {
-            if (ShootoutTweaks.INSTANCE.config.debug) {
-                ShootoutTweaks.logger.info("config not found... write default");
-            }
+            ShootoutTweaks.logger.debug("config not found... write default");
             if (writeDefaultConfig(gson, configPath)) {
                 return;
             }
         }
-        if (ShootoutTweaks.INSTANCE.config.debug) {
-            ShootoutTweaks.logger.info("loading config from {}", configPath.toString());
-        }
+
+        ShootoutTweaks.logger.debug("loading config from {}", configPath.toString());
+
         try {
             ShootoutTweaks.INSTANCE.config = gson.fromJson(Files.newBufferedReader(configPath), Config.class);
         } catch (Exception e) {
@@ -70,9 +65,7 @@ public class CommonProxy {
             ShootoutTweaks.logger.error("Could not copy default config to " + configPath);
             return true;
         }
-        if (ShootoutTweaks.INSTANCE.config.debug) {
-            ShootoutTweaks.logger.info("default config created");
-        }
+        ShootoutTweaks.logger.debug("default config created");
         return false;
     }
 
