@@ -27,8 +27,8 @@ public class DamageListener {
                 final EntityPlayerMP dealer = (EntityPlayerMP) ev.getSource().getTrueSource();
 
                 if (ShootoutTweaks.INSTANCE.config.debug) {
-                    ShootoutTweaks.logger.info("{} damaged {} by {}HP. Sending packets..",
-                            dealer.toString(), receiver.toString(), ev.getAmount());
+                    ShootoutTweaks.logger.info("{} damaged {} by {}HP in {}. Sending packets..",
+                            dealer.toString(), receiver.toString(), ev.getAmount(), dim);
                 }
 
                 ShootOutNetworkWrapper.INSTANCE.sendTo(
@@ -43,8 +43,8 @@ public class DamageListener {
             } else if (!(ev.getSource().getTrueSource() instanceof EntityCreature)) {
 
                 if (ShootoutTweaks.INSTANCE.config.debug) {
-                    ShootoutTweaks.logger.info("some another.. {}, {} damaged {} by {}HP. Sending packet..",
-                            ev.getSource().getTrueSource(), ev.getSource().damageType, receiver.toString(), ev.getAmount());
+                    ShootoutTweaks.logger.info("some another.. {}, {} damaged {} by {}HP in {}. Sending packet..",
+                            ev.getSource().getTrueSource(), ev.getSource().damageType, receiver.toString(), ev.getAmount(), dim);
                 }
 
 

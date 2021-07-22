@@ -57,9 +57,6 @@ public class DamageDisplayMessage implements IMessage {
 
             if (ShootoutTweaks.INSTANCE.config.debug) {
                 ShootoutTweaks.logger.info("Getting packet: {}", message);
-                ShootoutTweaks.logger.info("ShootoutTweaks.proxy: {}", ShootoutTweaks.proxy);
-                ShootoutTweaks.logger.info("((ClientProxy) ShootoutTweaks.proxy).damageRenderer: {}",
-                        ((ClientProxy) ShootoutTweaks.proxy).damageRenderer);
             }
 
             ((ClientProxy) ShootoutTweaks.proxy).damageRenderer.updateDisplayDamage(dealer, amount, dim);

@@ -17,27 +17,29 @@ import java.util.stream.Collectors;
 public class DamageRenderer {
     private final FontRenderer fontRenderer;
     private final int receivedDamageColor;
-    private final int takeDamageColor;
+    private final int givenDamageColor;
     private final int durationDisplay;
     private final Set<Integer> enableWorlds;
     public volatile long receivedUpdate = 0L;
-    public volatile long takenUpdate = 0L;
+    public volatile long givenUpdate = 0L;
     public int lastAttacked = -1;
     public volatile float currentDamageReceived = 0.0F;
-    public volatile float currentDamageTaken = 0.0F;
+    public volatile float currentDamageGiven = 0.0F;
 
-    public DamageRenderer(int receivedDamageColor, int takeDamageColor, int durationDisplay, String[] enableWorlds) {
+    public DamageRenderer(int receivedDamageColor, int givenDamageColor, int durationDisplay, String[] enableWorlds) {
         this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
         this.receivedDamageColor = receivedDamageColor;
-        this.takeDamageColor = takeDamageColor;
+        this.givenDamageColor = givenDamageColor;
         this.durationDisplay = durationDisplay;
         this.enableWorlds = ImmutableSet.copyOf(
                 Arrays.stream(enableWorlds).map(s -> s.toLowerCase(Locale.ROOT))
                         .map(String::hashCode)
                         .collect(Collectors.toSet()));
         if (ShootoutTweaks.INSTANCE.config.debug) {
-            ShootoutTweaks.logger.info("Creating DamageRenderer w/: worlds={}",
-                    Arrays.deepToString(enableWorlds));
+            ShootoutTweaks.logger.info("Creating DamageRenderer w/: worlds=[{}]",
+                    Arrays.stream(enableWorlds).map(s -> s.toLowerCase(Locale.ROOT))
+                            .map(s -> s + ":" + s.hashCode()).collect(Collectors.joining(", "))
+            );
         }
     }
 
@@ -46,19 +48,29 @@ public class DamageRenderer {
 
         if (enableWorlds.contains(dim)) {
             if (profile == -1) {
+                if (ShootoutTweaks.INSTANCE.config.debug) {
+                    ShootoutTweaks.logger.info("Received packet with profile == -1. Displaying as received damage");
+                }
                 float d = currentDamageReceived;
                 currentDamageReceived = d + damage;
                 receivedUpdate = currentTimeMillis;
             } else if (lastAttacked != -1 && lastAttacked == profile) {
-                float d = currentDamageTaken;
-                currentDamageTaken = d + damage;
-                takenUpdate = currentTimeMillis;
-
+                if (ShootoutTweaks.INSTANCE.config.debug) {
+                    ShootoutTweaks.logger.info("Received packet with second cond. Displaying as given damage");
+                }
+                float d = currentDamageGiven;
+                currentDamageGiven = d + damage;
+                givenUpdate = currentTimeMillis;
             } else {
-                currentDamageTaken = damage;
+                if (ShootoutTweaks.INSTANCE.config.debug) {
+                    ShootoutTweaks.logger.info("Received packet with third cond. Displaying as given damage");
+                }
+                currentDamageGiven = damage;
                 lastAttacked = profile;
-                takenUpdate = currentTimeMillis;
+                givenUpdate = currentTimeMillis;
             }
+        } else if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("Received packet has disabled world. skipping...");
         }
     }
 
@@ -81,15 +93,15 @@ public class DamageRenderer {
             }
         }
 
-        if (currentDamageTaken > 0) {
-            if (takenUpdate + TimeUnit.SECONDS.toMillis(durationDisplay) < currentTimeMillis) {
-                currentDamageTaken = 0.0F;
+        if (currentDamageGiven > 0) {
+            if (givenUpdate + TimeUnit.SECONDS.toMillis(durationDisplay) < currentTimeMillis) {
+                currentDamageGiven = 0.0F;
                 lastAttacked = -1;
             } else {
                 GL11.glPushMatrix();
                 fontRenderer
-                        .drawStringWithShadow(String.format("%d", Math.round(currentDamageTaken)), width / 2 - 20, height / 2,
-                                takeDamageColor);
+                        .drawStringWithShadow(String.format("%d", Math.round(currentDamageGiven)), width / 2 - 20, height / 2,
+                                givenDamageColor);
                 GL11.glPopMatrix();
             }
         }
