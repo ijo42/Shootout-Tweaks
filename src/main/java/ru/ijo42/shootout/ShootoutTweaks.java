@@ -30,6 +30,7 @@ public class ShootoutTweaks {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit(event);
+        logger.info("Debug is enabled: {}", logger.isDebugEnabled());
     }
 
     @Mod.EventHandler

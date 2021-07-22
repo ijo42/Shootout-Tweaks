@@ -16,7 +16,7 @@ public class DamageListener {
             final EntityPlayerMP receiver = (EntityPlayerMP) ev.getEntity();
             String dim = receiver.world.provider.getSaveFolder();
             if (dim == null) {
-                if (receiver.dimension != 0) {
+                if (receiver.dimension != 0 || ShootoutTweaks.INSTANCE.config.debug) {
                     ShootoutTweaks.logger.error(String
                             .format("dim is null, forcing `%s`. dimension id: %d", receiver.world.getWorldInfo().getWorldName(),
                                     receiver.dimension));
@@ -25,6 +25,11 @@ public class DamageListener {
             }
             if (ev.getSource().getTrueSource() instanceof EntityPlayerMP) {
                 final EntityPlayerMP dealer = (EntityPlayerMP) ev.getSource().getTrueSource();
+
+                if (ShootoutTweaks.INSTANCE.config.debug) {
+                    ShootoutTweaks.logger.debug("{} damaged {} by {}HP. Sending packets..",
+                            dealer.toString(), receiver.toString(), ev.getAmount());
+                }
 
                 ShootOutNetworkWrapper.INSTANCE.sendTo(
                         new DamageDisplayMessage(Math.min(ev.getAmount(), receiver.getHealth()),
@@ -36,6 +41,13 @@ public class DamageListener {
                                 dim),
                         dealer);
             } else if (!(ev.getSource().getTrueSource() instanceof EntityCreature)) {
+
+                if (ShootoutTweaks.INSTANCE.config.debug) {
+                    ShootoutTweaks.logger.debug("some another.. {}, {} damaged {} by {}HP. Sending packet..",
+                            ev.getSource().getTrueSource(), ev.getSource().damageType, receiver.toString(), ev.getAmount());
+                }
+
+
                 ShootOutNetworkWrapper.INSTANCE.sendTo(
                         new DamageDisplayMessage(Math.min(ev.getAmount(), receiver.getHealth()), receiver.getGameProfile().hashCode(),
                                 dim),

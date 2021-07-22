@@ -41,6 +41,7 @@ public class CommonProxy {
 
         ShootOutNetworkWrapper.INSTANCE.registerMessage(DamageDisplayMessage.DamageDisplayMessageHandler.class, DamageDisplayMessage.class, 0, Side.CLIENT);
         if(event.getSide() == Side.SERVER) {
+            ShootoutTweaks.logger.debug("Detected server-side... registering DamageListener");
             MinecraftForge.EVENT_BUS.register(new DamageListener());
         }
     }

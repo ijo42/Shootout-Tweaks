@@ -2,6 +2,8 @@ package ru.ijo42.shootout;
 
 public class Config {
 
+    public boolean debug = false;
+
     public Modules modules = new Modules();
 
     public BulletDamage bulletDamage = new BulletDamage();

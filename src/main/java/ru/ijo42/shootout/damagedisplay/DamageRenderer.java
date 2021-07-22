@@ -6,6 +6,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
+import ru.ijo42.shootout.ShootoutTweaks;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -34,6 +35,10 @@ public class DamageRenderer {
                 Arrays.stream(enableWorlds).map(s -> s.toLowerCase(Locale.ROOT))
                         .map(String::hashCode)
                         .collect(Collectors.toSet()));
+        if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.debug("Creating DamageRenderer w/: worlds={}",
+                    Arrays.deepToString(enableWorlds));
+        }
     }
 
     public void updateDisplayDamage(int profile, float damage, int dim) {

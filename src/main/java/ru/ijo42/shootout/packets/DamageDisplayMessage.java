@@ -37,6 +37,15 @@ public class DamageDisplayMessage implements IMessage {
         dim = buf.readInt();
     }
 
+    @Override
+    public String toString() {
+        return "DamageDisplayMessage{" +
+                "amount=" + amount +
+                ", dealer=" + dealer +
+                ", dim=" + dim +
+                '}';
+    }
+
     public static class DamageDisplayMessageHandler implements IMessageHandler<DamageDisplayMessage, IMessage> {
 
         @Override
@@ -45,6 +54,13 @@ public class DamageDisplayMessage implements IMessage {
             float amount = message.amount;
             int dealer = message.dealer;
             int dim = message.dim;
+
+            if (ShootoutTweaks.INSTANCE.config.debug) {
+                ShootoutTweaks.logger.debug("Getting packet: {}", message);
+                ShootoutTweaks.logger.debug("ShootoutTweaks.proxy: {}", ShootoutTweaks.proxy);
+                ShootoutTweaks.logger.debug("((ClientProxy) ShootoutTweaks.proxy).damageRenderer: {}",
+                        ((ClientProxy) ShootoutTweaks.proxy).damageRenderer);
+            }
 
             ((ClientProxy) ShootoutTweaks.proxy).damageRenderer.updateDisplayDamage(dealer, amount, dim);
             return null;
