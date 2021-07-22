@@ -36,7 +36,7 @@ public class DamageRenderer {
                         .map(String::hashCode)
                         .collect(Collectors.toSet()));
         if (ShootoutTweaks.INSTANCE.config.debug) {
-            ShootoutTweaks.logger.debug("Creating DamageRenderer w/: worlds={}",
+            ShootoutTweaks.logger.info("Creating DamageRenderer w/: worlds={}",
                     Arrays.deepToString(enableWorlds));
         }
     }

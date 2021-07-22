@@ -13,6 +13,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+
+        if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("init Stage. loading colors...");
+        }
+
         int giveDamageColor,
                 takeDamageColor;
         try {
@@ -22,9 +27,10 @@ public class ClientProxy extends CommonProxy {
             this.damageRenderer = new DamageRenderer(giveDamageColor, takeDamageColor,
                     config.bulletDamage.delay, config.bulletDamage.enableWorlds);
             if (config.modules.bulletDamage) {
+                ShootoutTweaks.logger.info("bulletDamage is true, registering...");
                 MinecraftForge.EVENT_BUS.register(this.damageRenderer);
             } else {
-                ShootoutTweaks.logger.debug("bulletDamage is false, registration is not required");
+                ShootoutTweaks.logger.info("bulletDamage is false, registration is not required");
             }
         } catch (Exception e) {
             ShootoutTweaks.logger.error(e);

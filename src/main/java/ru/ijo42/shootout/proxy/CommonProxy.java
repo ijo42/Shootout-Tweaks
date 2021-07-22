@@ -21,27 +21,43 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         ShootoutTweaks.logger = event.getModLog();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("preInit Stage. loading configs..");
+        }
         Path configPath = event.getModConfigurationDirectory().toPath().resolve("plugins").resolve(ShootoutTweaks.CONFIG_FILENAME);
-        configPath.getParent().toFile().mkdirs();
+
+        if (configPath.getParent().toFile().mkdirs() && ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("config dir created");
+        }
 
         if (Files.notExists(configPath)) {
+            if (ShootoutTweaks.INSTANCE.config.debug) {
+                ShootoutTweaks.logger.info("config not found... write default");
+            }
             if (writeDefaultConfig(gson, configPath)) {
                 return;
             }
         }
-
+        if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("loading config from {}", configPath.toString());
+        }
         try {
             ShootoutTweaks.INSTANCE.config = gson.fromJson(Files.newBufferedReader(configPath), Config.class);
         } catch (Exception e) {
-            ShootoutTweaks.logger.error("[ShootoutTweaks] Could not load config. Forcing defaults");
+            ShootoutTweaks.logger.error("Could not load config. Forcing defaults");
             if (writeDefaultConfig(gson, configPath)) {
-                return;
+                ShootoutTweaks.INSTANCE.config = new Config();
             }
         }
 
-        ShootOutNetworkWrapper.INSTANCE.registerMessage(DamageDisplayMessage.DamageDisplayMessageHandler.class, DamageDisplayMessage.class, 0, Side.CLIENT);
-        if(event.getSide() == Side.SERVER) {
-            ShootoutTweaks.logger.debug("Detected server-side... registering DamageListener");
+        if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("registering DamageDisplay Packet");
+        }
+
+        ShootOutNetworkWrapper.INSTANCE
+                .registerMessage(DamageDisplayMessage.DamageDisplayMessageHandler.class, DamageDisplayMessage.class, 0, Side.CLIENT);
+        if (event.getSide() == Side.SERVER) {
+            ShootoutTweaks.logger.info("Detected server-side... registering DamageListener");
             MinecraftForge.EVENT_BUS.register(new DamageListener());
         }
     }
@@ -51,8 +67,11 @@ public class CommonProxy {
             gson.newJsonWriter(new PrintWriter(configPath.toFile()))
                     .jsonValue(gson.toJson(new Config(), Config.class)).close();
         } catch (Exception e) {
-            ShootoutTweaks.logger.error("[ShootoutTweaks] Could not copy default config to " + configPath);
+            ShootoutTweaks.logger.error("Could not copy default config to " + configPath);
             return true;
+        }
+        if (ShootoutTweaks.INSTANCE.config.debug) {
+            ShootoutTweaks.logger.info("default config created");
         }
         return false;
     }
