@@ -19,11 +19,11 @@ public class DamageListener {
                     receiver.world.provider.getSaveFolder();
             if (dim == null) {
                 if (receiver.dimension != 0 || ShootoutTweaks.INSTANCE.config.debug) {
-                    ShootoutTweaks.logger.error(String
-                            .format("dim is null, forcing `%s`. dimension id: %d", receiver.world.getWorldInfo().getWorldName(),
-                                    receiver.dimension));
+                    ShootoutTweaks.logger.error("dim is null, forcing `{}`. dimension id: {}",
+                            receiver.world.getWorldInfo().getWorldName(),
+                            receiver.dimension);
                 }
-                dim = "world";
+                dim = receiver.world.getWorldInfo().getWorldName();
             }
             if (ev.getSource().getTrueSource() instanceof EntityPlayerMP) {
                 final EntityPlayerMP dealer = (EntityPlayerMP) ev.getSource().getTrueSource();
