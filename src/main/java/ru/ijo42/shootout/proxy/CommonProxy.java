@@ -54,6 +54,13 @@ public class CommonProxy {
         if (event.getSide() == Side.SERVER) {
             ShootoutTweaks.logger.info("Detected server-side... registering DamageListener");
             MinecraftForge.EVENT_BUS.register(new DamageListener());
+
+            if (!ShootoutTweaks.INSTANCE.config.alterWorldGrab &&
+                    event.getModConfigurationDirectory().toPath().resolve("../plugins").toFile().isDirectory()) {
+                ShootoutTweaks.logger.error("Detected Hybrid core. " +
+                        "For an accurate definition of the world, it is necessary " +
+                        "to set the `alterWorldGrab` parameter to true, more details on the CurseForge");
+            }
         }
     }
 
